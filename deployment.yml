@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bms-container
-          image: rancha/bms:latest  # Your Docker image
+          image: rancha123/bms:latest  # Your Docker image
           ports:
             - containerPort: 3000
       tolerations:
