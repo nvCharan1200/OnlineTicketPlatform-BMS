@@ -1,0 +1,52 @@
+---
+- name: Configure EKS Connection & Deploy Application
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    cluster_name: "EKS-cluster1"
+    aws_region: "us-east-1"
+    namespace: "bms-app"
+
+  tasks:
+    - name: Verify AWS Identity
+      command: aws sts get-caller-identity
+      register: aws_identity
+
+    - debug:
+        var: aws_identity.stdout
+
+    - name: Update kubeconfig for EKS
+      command: >
+        aws eks update-kubeconfig
+        --name {{ cluster_name }}
+        --region {{ aws_region }}
+      changed_when: true
+
+    - name: Verify kubectl context
+      command: kubectl config current-context
+      register: kube_context
+      changed_when: false
+
+    - debug:
+        var: kube_context.stdout
+
+    - name: Create Namespace
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ namespace }}"
+        state: present
+
+    - name: Deploy Application
+      kubernetes.core.k8s:
+        state: present
+        namespace: "{{ namespace }}"
+        src: "../k8s/deployment.yml"
+
+    - name: Deploy Service
+      kubernetes.core.k8s:
+        state: present
+        namespace: "{{ namespace }}"
+        src: "../k8s/service.yml"
