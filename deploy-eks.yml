@@ -8,6 +8,8 @@
     cluster_name: "eks-cluster"
     aws_region: "us-east-1"
     namespace: "bms-app"
+    ansible_python_interpreter: /opt/ansible-venv/bin/python
+
 
   tasks:
     - name: Verify AWS Identity
