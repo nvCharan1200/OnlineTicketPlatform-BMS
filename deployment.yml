@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bms-app
+  namespace: bms-app
   labels:
     app: bms
 spec:
@@ -15,18 +16,17 @@ spec:
         app: bms
     spec:
       containers:
-      - name: bms-container
-        image: rancha/bms:latest  # Your Docker image
-        ports:
-        - containerPort: 3000
-      # Add tolerations so pods can schedule on tainted nodes
+        - name: bms-container
+          image: rancha/bms:latest  # Your Docker image
+          ports:
+            - containerPort: 3000
       tolerations:
-      - key: "node.kubernetes.io/memory-pressure"
-        operator: "Exists"
-        effect: "NoSchedule"
-      - key: "node.kubernetes.io/disk-pressure"
-        operator: "Exists"
-        effect: "NoSchedule"
-      - key: "node.kubernetes.io/unschedulable"
-        operator: "Exists"
-        effect: "NoSchedule"
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/memory-pressure"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoSchedule"
