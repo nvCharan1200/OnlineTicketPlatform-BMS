@@ -43,10 +43,10 @@
       kubernetes.core.k8s:
         state: present
         namespace: "{{ namespace }}"
-        src: "../k8s/deployment.yml"
+        src: "deployment.yml"
 
     - name: Deploy Service
       kubernetes.core.k8s:
         state: present
         namespace: "{{ namespace }}"
-        src: "../k8s/service.yml"
+        src: "service.yml"
